@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import './App.scss';
-import 'react-datepicker/dist/react-datepicker.css';
 import { Container, FormControl, TextField } from '@material-ui/core';
 import DateFnsUtils from '@date-io/moment';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -14,7 +13,7 @@ const App: React.FC = () => {
     const handleKeyUp = useCallback((e) => {
         if (e.key === 'Enter') {
             setCity(e.target.value);
-            console.log('searching for a new city: ' + e.target.value)
+            console.log('searching for a City: ' + e.target.value)
         }
     }, [setCity]);
     return (

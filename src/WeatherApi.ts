@@ -57,7 +57,7 @@ export interface OpenWeatherDay {
 }
 export interface OpenWeatherForecastApiResponse {
     "cod": string,
-    "message": number,
+    "message": string,
     "cnt": number,
     "list": OpenWeatherDay[],
     "city": {
@@ -76,11 +76,14 @@ export interface OpenWeatherForecastApiResponse {
 }
 
 export const processData = (
-    data: OpenWeatherForecastApiResponse,
-    date: Moment
+    data: OpenWeatherForecastApiResponse | null,
+    date: Moment | null
 ) => {
-    if (!data || data.list.length === 0) {
-        return null;
+    if (!data || data.cod !== "200" || data.list.length === 0 || !date) {
+        return {
+            current: null,
+            err: (data && data.cod) ? data.message : undefined,
+        };
     }
 
     const availableDays = {};
@@ -102,6 +105,7 @@ export const processData = (
         cityName: data.city.name,
         current,
         list,
+        err: null,
     };
 };
 

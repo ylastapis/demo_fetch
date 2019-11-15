@@ -3,12 +3,15 @@
   font-size: 13px;
 
   .rw-main {
+    min-height: 192px;
     border-radius: 5px 5px 0 0;
     color: #3f51b5;
     width: 100%;
     height: 100%;
     border: 1px solid #3f51b5;
     display: flex;
+    justify-content: center;
+    align-items: center;
 
     h2 {
       margin: 0 0 10px 0;
@@ -73,6 +76,7 @@
   }
 
   .rw-box-days {
+    min-height: 175px;
     display: flex;
     flex-flow: row;
     justify-content: center;
@@ -91,10 +95,18 @@
       justify-content: center;
       align-items: center;
       margin: 10px;
+      position: relative;
     }
 
-    .rw-day:not(:first-child) {
-      border-left: solid 1px #ddd;
+    .rw-day + .rw-day:before {
+      content: '';
+      display: block;
+      height: 100%;
+      width: 1px;
+      background-color: #ddd;
+      position: absolute;
+      left: -10px;
+      bottom: 0;
     }
 
     .rw-date {
@@ -106,6 +118,7 @@
       margin: 10px 0 10px 0;
       font-size: 12px;
       text-align: center;
+      min-height: 30px;
     }
 
     .rw-range {

@@ -58,33 +58,18 @@ export class WeatherFetcher extends React.Component<WeatherFetcherProps, Weather
 
     render() {
         const { data, loading, error } = this.state;
-        const { city, date } = this.props;
-
-        if ( !date || !city ) {
-            return <span>empty</span>
-        }
-
-        if (loading) {
-            return <span>Loading</span>
-        }
+        const { date } = this.props;
 
         if (error) {
             return <span>Some error</span>
         }
 
-        if (!data) {
-            return <span>Nothing to display</span>
-        }
-
         const processedData = processData(data, date);
-
-        if (!processedData || !processedData.current) {
-            return <span>Nothing to display</span>
-        }
 
         return (
             <Weather
                 {...processedData}
+                loading={loading}
             />
         );
     }
