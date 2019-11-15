@@ -1,6 +1,6 @@
 import './Weather.scss'
 import React from 'react';
-import { OpenWeatherForecastApiResponse, processData } from './WeatherApi';
+import { OpenWeatherForecastApiResponse } from './WeatherApi';
 import { Moment } from 'moment';
 import { Weather } from './Weather';
 
@@ -11,7 +11,7 @@ interface WeatherFetcherProps {
 interface WeatherFetcherState {
     data: null | OpenWeatherForecastApiResponse;
     loading: boolean;
-    error: null | any;
+    fetchError: null | any;
 }
 export class WeatherFetcher extends React.Component<WeatherFetcherProps, WeatherFetcherState> {
     constructor(props: WeatherFetcherProps) {
@@ -19,7 +19,7 @@ export class WeatherFetcher extends React.Component<WeatherFetcherProps, Weather
         this.state = {
             data: null,
             loading: false,
-            error: null,
+            fetchError: null,
         };
     }
 
@@ -38,7 +38,7 @@ export class WeatherFetcher extends React.Component<WeatherFetcherProps, Weather
     handleFetch() {
         this.setState({
             loading: true,
-            error: null,
+            fetchError: null,
         });
 
         fetch(`http://api.openweathermap.org/data/2.5/forecast?appid=abdd4534fe73e0245449d2a7dee7ca3a&q=${this.props.city}&lang=fr&units=metric`)
@@ -49,7 +49,7 @@ export class WeatherFetcher extends React.Component<WeatherFetcherProps, Weather
                 });
             })
             .catch(e => this.setState({
-                error: e
+                fetchError: e
             }))
             .finally(() => this.setState({
                 loading: false
@@ -57,19 +57,12 @@ export class WeatherFetcher extends React.Component<WeatherFetcherProps, Weather
     }
 
     render() {
-        const { data, loading, error } = this.state;
         const { date } = this.props;
-
-        if (error) {
-            return <span>Some error</span>
-        }
-
-        const processedData = processData(data, date);
 
         return (
             <Weather
-                {...processedData}
-                loading={loading}
+                {...this.state}
+                date={date}
             />
         );
     }
