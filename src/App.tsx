@@ -25,6 +25,7 @@ const App: React.FC = () => {
                             <DatePicker
                                 label="Date"
                                 value={date} onChange={m => setDate(m)}
+                                minDate={getMoment()}
                             />
                         </MuiPickersUtilsProvider>
                     </FormControl>
