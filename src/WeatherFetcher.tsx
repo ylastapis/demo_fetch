@@ -43,11 +43,9 @@ export class WeatherFetcher extends React.Component<WeatherFetcherProps, Weather
 
         fetch(`http://api.openweathermap.org/data/2.5/forecast?appid=abdd4534fe73e0245449d2a7dee7ca3a&q=${this.props.city}&lang=fr&units=metric`)
             .then(response => response.json())
-            .then((data : OpenWeatherForecastApiResponse)=> {
-                this.setState({
-                    data
-                });
-            })
+            .then((data : OpenWeatherForecastApiResponse)=> this.setState({
+                data
+            }))
             .catch(e => this.setState({
                 fetchError: e
             }))
