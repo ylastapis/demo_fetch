@@ -11,9 +11,8 @@ interface WeatherProps {
     city: string;
     date: Moment | null;
 }
-export const Weather = ({
-    city, date,
-}: WeatherProps) => {
+
+const useWeather = (city: string, date: Moment | null) => {
     const [data, setData] = useState<null | OpenWeatherForecastApiResponse>(null);
     const [loading, setLoading] = useState(false);
     const [fetchError, setFetchError] = useState<null | any>(null);
@@ -22,11 +21,13 @@ export const Weather = ({
         setLoading(true);
         setFetchError(null);
 
-        fetch(`http://api.openweathermap.org/data/2.5/forecast?appid=abdd4534fe73e0245449d2a7dee7ca3a&q=${city}&lang=fr&units=metric`)
+        fetch(
+            `http://api.openweathermap.org/data/2.5/forecast?appid=abdd4534fe73e0245449d2a7dee7ca3a&q=${city}&lang=fr&units=metric`)
             .then(response => response.json())
             .then((data : OpenWeatherForecastApiResponse)=> {
                 setData(data);
                 setFetchError(null);
+                setLoading(false);
             })
             .catch(e => {
                 setFetchError(e);
@@ -40,16 +41,32 @@ export const Weather = ({
         }
     }, [city, date, doRequest]);
 
+    const {todayIcon, cityName, current, list, err} = processData(data, date);
+
+    return {
+        loading,
+        fetchError,
+        todayIcon, cityName, current, list, err
+    };
+};
+
+export const Weather = ({
+                            city, date,
+                        }: WeatherProps) => {
+    const {
+        loading,
+        fetchError,
+        todayIcon, cityName, current, list, err
+    } = useWeather(city, date);
+
     if (fetchError) {
         return <span>Errors occurred during request</span>
     }
-    const { todayIcon, cityName, current, list, err } = processData(data, date);
-
     return (
         <div className="rw-box">
             <div className="rw-main">
                 {loading ? (
-                    <CircularProgress disableShrink />
+                    <CircularProgress disableShrink/>
                 ) : current && (
                     <>
                         <div className="rw-box-left">
@@ -85,7 +102,7 @@ export const Weather = ({
                 )}
             </div>
             <div
-                className={classNames("rw-box-days", {
+                className={classNames('rw-box-days', {
                     empty: !list || list.length === 0
                 })}
             >
