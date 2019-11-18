@@ -12,7 +12,7 @@ interface WeatherProps {
     date: Moment | null;
 }
 
-const useWeather = (city: string, date: Moment | null) => {
+const useFetch = (uri: string) => {
     const [data, setData] = useState<null | OpenWeatherForecastApiResponse>(null);
     const [loading, setLoading] = useState(false);
     const [fetchError, setFetchError] = useState<null | any>(null);
@@ -22,7 +22,7 @@ const useWeather = (city: string, date: Moment | null) => {
         setFetchError(null);
 
         fetch(
-            `http://api.openweathermap.org/data/2.5/forecast?appid=abdd4534fe73e0245449d2a7dee7ca3a&q=${city}&lang=fr&units=metric`)
+            uri)
             .then(response => response.json())
             .then((data : OpenWeatherForecastApiResponse)=> {
                 setData(data);
@@ -33,7 +33,23 @@ const useWeather = (city: string, date: Moment | null) => {
                 setFetchError(e);
                 setLoading(false);
             })
-    }, [city]);
+    }, [uri]);
+
+    return {
+        data,
+        loading,
+        fetchError,
+        doRequest,
+    };
+};
+
+const useWeather = (city: string, date: Moment | null) => {
+    const {
+        data,
+        loading,
+        fetchError,
+        doRequest,
+    } = useFetch(`http://api.openweathermap.org/data/2.5/forecast?appid=abdd4534fe73e0245449d2a7dee7ca3a&q=${city}&lang=fr&units=metric`);
 
     useEffect(() => {
         if (city && date) {
