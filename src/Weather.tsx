@@ -11,41 +11,27 @@ interface WeatherProps {
     city: string;
     date: Moment | null;
 }
-interface WeatherState {
-    data: null | OpenWeatherForecastApiResponse;
-    loading: boolean;
-    fetchError: null | any;
-}
 export const Weather = ({
     city, date,
 }: WeatherProps) => {
-    const [state, setState] = useState<WeatherState>({
-        data: null,
-        loading: false,
-        fetchError: null,
-    });
+    const [data, setData] = useState<null | OpenWeatherForecastApiResponse>(null);
+    const [loading, setLoading] = useState(false);
+    const [fetchError, setFetchError] = useState<null | any>(null);
 
     const doRequest = useCallback(() => {
-        setState(s => ({
-            ...s,
-            loading: true,
-            fetchError: null,
-        }));
+        setLoading(true);
+        setFetchError(null);
 
         fetch(`http://api.openweathermap.org/data/2.5/forecast?appid=abdd4534fe73e0245449d2a7dee7ca3a&q=${city}&lang=fr&units=metric`)
             .then(response => response.json())
             .then((data : OpenWeatherForecastApiResponse)=> {
-                setState(s => ({
-                    ...s,
-                    data,
-                    loading: false,
-                }));
+                setData(data);
+                setFetchError(null);
             })
-            .catch(e => setState(s => ({
-                ...s,
-                fetchError: e,
-                loading: false,
-            })))
+            .catch(e => {
+                setFetchError(e);
+                setLoading(false);
+            })
     }, [city]);
 
     useEffect(() => {
@@ -54,17 +40,11 @@ export const Weather = ({
         }
     }, [city, date, doRequest]);
 
-
-    const {
-        data,
-        loading,
-        fetchError,
-    } = state;
-
     if (fetchError) {
         return <span>Errors occurred during request</span>
     }
     const { todayIcon, cityName, current, list, err } = processData(data, date);
+
     return (
         <div className="rw-box">
             <div className="rw-main">
