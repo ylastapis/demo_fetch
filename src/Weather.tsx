@@ -27,13 +27,16 @@ export class Weather extends React.Component<WeatherProps, WeatherState> {
     }
 
     componentDidMount(): void {
-        if (this.props.city) {
+        if (this.props.city && this.props.date) {
             this.handleFetch();
         }
     }
 
     componentDidUpdate(prevProps: Readonly<WeatherProps>, prevState: Readonly<WeatherState>, snapshot?: any): void {
-        if (this.props.city && prevProps.city !== this.props.city) {
+        if (
+            (this.props.city && prevProps.city !== this.props.city) ||
+            (this.props.date && prevProps.date !== this.props.date)
+        ) {
             this.handleFetch();
         }
     }
@@ -46,15 +49,16 @@ export class Weather extends React.Component<WeatherProps, WeatherState> {
 
         fetch(`http://api.openweathermap.org/data/2.5/forecast?appid=abdd4534fe73e0245449d2a7dee7ca3a&q=${this.props.city}&lang=fr&units=metric`)
             .then(response => response.json())
-            .then((data : OpenWeatherForecastApiResponse)=> this.setState({
-                data
-            }))
+            .then((data : OpenWeatherForecastApiResponse)=> {
+                this.setState({
+                    data,
+                    loading: false,
+                });
+            })
             .catch(e => this.setState({
-                fetchError: e
+                fetchError: e,
+                loading: false,
             }))
-            .finally(() => this.setState({
-                loading: false
-            }));
     }
 
     render() {

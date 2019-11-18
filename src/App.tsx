@@ -55,7 +55,7 @@ const App: React.FC = () => {
                     </FormControl>
                 </div>
                 <div className="right">
-                    {visible && city && (<Weather city={city} date={date} />)}
+                    {visible  && (<Weather city={city} date={date} />)}
                 </div>
             </Container>
         </div>
