@@ -28,7 +28,7 @@ export class Weather extends React.Component<WeatherProps, WeatherState> {
 
     componentDidMount(): void {
         if (this.props.city && this.props.date) {
-            this.handleFetch();
+            this.doRequest();
         }
     }
 
@@ -37,11 +37,11 @@ export class Weather extends React.Component<WeatherProps, WeatherState> {
             (this.props.city && prevProps.city !== this.props.city) ||
             (this.props.date && prevProps.date !== this.props.date)
         ) {
-            this.handleFetch();
+            this.doRequest();
         }
     }
 
-    handleFetch() {
+    doRequest() {
         this.setState({
             loading: true,
             fetchError: null,
